@@ -60,6 +60,7 @@ public class WatchlistController implements Initializable, Observer {
             observableWatchlist.addAll(movies);
             watchlistView.setItems(observableWatchlist);
             watchlistView.setCellFactory(movieListView -> new WatchlistCell(onRemoveFromWatchlistClicked));
+            WatchlistRepository.getInstance().addObserver(this);
 
         } catch (DataBaseException e) {
             UserDialog dialog = new UserDialog("Database Error", "Could not read movies from DB");
@@ -69,6 +70,9 @@ public class WatchlistController implements Initializable, Observer {
 
         if(watchlist.size() == 0) {
             watchlistView.setPlaceholder(new javafx.scene.control.Label("Watchlist is empty"));
+        }
+        if (!watchlistRepository.hasObserver(this)) {
+            watchlistRepository.addObserver(this);
         }
 
         System.out.println("WatchlistController initialized");
